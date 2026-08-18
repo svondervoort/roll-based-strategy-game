@@ -111,7 +111,7 @@ function App() {
           </button>
         )}
       </div>
-      <div className="w-1/4 flex flex-col gap-4 border-l border-gray-500 p-4 overflow-x-hidden overflow-y-auto">
+      <div className="w-1/4 flex flex-col gap-4 border-l border-gray-500 overflow-x-hidden overflow-y-auto">
         <LogList items={logItems}></LogList>
       </div>
     </div>

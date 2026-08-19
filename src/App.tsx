@@ -7,7 +7,12 @@ import type { LogType } from "./types/LogType";
 
 function App() {
 
-  const colors = ["red", "blue", "green", "yellow"];
+  const colors = [
+    { color: "oklch(63.7% 0.237 25.331)", name: "Red" },
+    { color: "oklch(76.8% 0.233 130.85)", name: "Green" },
+    { color: "oklch(68.5% 0.169 237.323)", name: "Blue" },
+    { color: "oklch(79.5% 0.184 86.047)", name: "Yellow" }
+  ];
 
   const movements = [
     {icon: "🚶‍➡️", name: "Walk"},
@@ -27,17 +32,17 @@ function App() {
     id: "",
     icon: "⁉️",
     name: "",
-    color: "black",
+    color: "oklch(55.4% 0.046 257.417)",
     visible: true,
     selected: false,
   };
 
   const initialColorCards: CardType[] = colors.map((color) =>
-    createCard({ icon: "🧑‍🦱", name: color, color: color }),
+    createCard({ icon: "🧑‍🦱", name: color.name, color: color.color }),
   );
 
   const colorOptionCards: CardType[] = colors.map((color) =>
-    createCard({ icon: "🧑‍🦱", name: color, color: color }),
+    createCard({ icon: "🧑‍🦱", name: color.name, color: color.color }),
   );
 
   const initialMovementCards: CardType[] = movements.map((movement) =>

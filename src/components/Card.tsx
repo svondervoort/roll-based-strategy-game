@@ -21,6 +21,7 @@ export function Card({
   return (
     <button
       type="button"
+      disabled={!interactive}
       title={card.name}
       className={`
         ${interactive ? `cursor-pointer scale-100 hover:-top-2 hover:scale-125 hover:rotate-6 hover:z-999!` : ``}

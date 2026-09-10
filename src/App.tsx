@@ -1,13 +1,13 @@
 import { useState } from "react";
+import { randomInt } from "./helpers/Helpers";
+
 import { CardsList } from "./components/CardsList";
 import { LogList } from "./components/LogList";
 
 import type { CardType } from "./types/CardType";
 import type { LogType } from "./types/LogType";
 
-function App() {
-
-  const colors = [
+const colors = [
     { color: "oklch(63.7% 0.237 25.331)", name: "Red" },
     { color: "oklch(76.8% 0.233 130.85)", name: "Green" },
     { color: "oklch(68.5% 0.169 237.323)", name: "Blue" },
@@ -28,20 +28,19 @@ function App() {
     {icon: "🌟", name: "Special"}
 ];
 
-  const cardDefaults: CardType = {
-    id: "",
-    icon: "⁉️",
-    name: "",
-    color: "oklch(55.4% 0.046 257.417)",
-    visible: true,
-    selected: false,
-  };
+const cardDefaults: CardType = {
+  id: "",
+  icon: "⁉️",
+  name: "",
+  color: "oklch(55.4% 0.046 257.417)",
+  visible: true,
+  selected: false,
+};
 
+const cardsMaxAmount = 6;
+
+function App() {
   const initialColorCards: CardType[] = colors.map((color) =>
-    createCard({ icon: "🧑‍🦱", name: color.name, color: color.color }),
-  );
-
-  const colorOptionCards: CardType[] = colors.map((color) =>
     createCard({ icon: "🧑‍🦱", name: color.name, color: color.color }),
   );
 
@@ -49,15 +48,7 @@ function App() {
     createCard({ icon: movement.icon, name: movement.name }),
   );
 
-  const movementOptionCards: CardType[] = movements.map((movement) =>
-    createCard({ icon: movement.icon, name: movement.name }),
-  );
-
   const initialActionCards: CardType[] = actions.map((action) =>
-    createCard({ icon: action.icon, name: action.name }),
-  );
-
-  const actionOptionCards: CardType[] = actions.map((action) =>
     createCard({ icon: action.icon, name: action.name }),
   );
 
@@ -65,7 +56,26 @@ function App() {
   const [colorCards, setColorCards] = useState<CardType[]>(initialColorCards);
   const [movementCards, setMovementCards] = useState<CardType[]>(initialMovementCards);
   const [actionCards, setActionCards] = useState<CardType[]>(initialActionCards);
+  const [playerCards, setPlayerCards] = useState<CardType[]>(() => generatePlayerCards());
   const [logItems, setLogItems] = useState<LogType[]>([]);
+
+  function generatePlayerCards (): CardType[] {
+    const cards = [];
+    const playerCardsCount = randomInt(1, (cardsMaxAmount/2));
+    const remainingCardsCount = cardsMaxAmount - playerCardsCount;
+    // Create Player Cards
+    for (let i = 0; i < playerCardsCount; i++) {
+      cards.push(createCard({ icon: "🧑‍🦱", name: colors[0].name, color: colors[0].color }))
+    }
+    // Fill remaining slots with Action Cards
+    for (let i = 0; i < remainingCardsCount; i++) {
+      // Select a random action from the possible actions
+      const action = actions[randomInt(0, actions.length - 1)];
+      cards.push(createCard({ icon: action.icon, name: action.name }))
+    }
+
+    return cards;
+  }
 
   function createCard(overrides: Partial<CardType>): CardType {
     return {
@@ -119,6 +129,7 @@ function App() {
     setColorCards(initialColorCards);
     setMovementCards(initialMovementCards);
     setActionCards(initialActionCards);
+    setPlayerCards(generatePlayerCards());
     setGameState("addCards");
   }
 
@@ -128,26 +139,17 @@ function App() {
 
         <div className="flex gap-8">
           <div className="shrink-0">
-            <CardsList title="Add to Player Stack" cards={colorOptionCards} interactive={gameState === 'addCards'} gameState={gameState} onClick={(card) => addCard(card, "color")}></CardsList>
+            <CardsList title="Player Cards" cards={playerCards} interactive={gameState === 'addCards'} gameState={gameState} onClick={(card) => addCard(card, "color")}></CardsList>
           </div>
+        </div>
+
+        <div className="flex gap-8">
           <div className="overflow-x-auto">
-            <CardsList title="Player Stack" cards={colorCards} interactive={false} gameState={gameState}></CardsList>
+            <CardsList title="Color Stack" cards={colorCards} interactive={false} gameState={gameState}></CardsList>
           </div>
         </div>
 
         <div className="flex gap-8">
-          <div className="shrink-0">
-            <CardsList title="Add to Action Stack" cards={movementOptionCards} interactive={gameState === 'addCards'} gameState={gameState} onClick={(card) => addCard(card, "movement")}></CardsList>
-          </div>
-          <div>
-            <CardsList title="Movement Stack" cards={movementCards} interactive={false} gameState={gameState}></CardsList>
-          </div>
-        </div>
-
-        <div className="flex gap-8">
-          <div className="shrink-0">
-            <CardsList title="Add to Action Stack" cards={actionOptionCards} interactive={gameState === 'addCards'} gameState={gameState} onClick={(card) => addCard(card, "action")}></CardsList>
-          </div>
           <div>
             <CardsList title="Action Stack" cards={actionCards} interactive={false} gameState={gameState}></CardsList>
           </div>

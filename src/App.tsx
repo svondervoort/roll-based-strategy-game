@@ -9,6 +9,10 @@ import { randomInt } from "./helpers/Helpers";
 import { CardKind, type CardType } from "./types/CardType";
 import type { LogType } from "./types/LogType";
 
+/********************************************************************************************************************************
+ * 🗄️ Fixed data
+ *******************************************************************************************************************************/
+
 export enum GameState {
   SelectCards = "selectCards",
   AddCards = "addCards",
@@ -55,6 +59,10 @@ const cardDefaults: CardType = {
 const cardsMaxAmount = 6;
 
 function App() {
+  /********************************************************************************************************************************
+   * 🗄️ Dynamic data and states
+   *******************************************************************************************************************************/
+
   const initialColorCards: CardType[] = colors.map((color) =>
     createCard({ icon: "🧑‍🦱", name: color.name, color: color.color, type: CardKind.Color }),
   );
@@ -74,6 +82,10 @@ function App() {
   const [playerCards, setPlayerCards] = useState<CardType[]>(() => generatePlayerCards());
   const [logItems, setLogItems] = useState<LogType[]>([]);
 
+  /********************************************************************************************************************************
+   * ▶️ Generate a random collection of Player Cards
+   *******************************************************************************************************************************/
+
   function generatePlayerCards (): CardType[] {
     const cards = [];
     const playerCardsCount = randomInt(1, (cardsMaxAmount/2));
@@ -92,6 +104,10 @@ function App() {
     return cards;
   }
 
+  /********************************************************************************************************************************
+   * ▶️ Creates Card objects with default and overwrites
+   *******************************************************************************************************************************/
+
   function createCard(overrides: Partial<CardType>): CardType {
     return {
       ...cardDefaults,
@@ -100,14 +116,21 @@ function App() {
     };
   }
 
+  /********************************************************************************************************************************
+   * ▶️ Update Player Cards with the Selected states
+   *******************************************************************************************************************************/
+
   function selectCard(card: CardType) {
     setPlayerCards((prev) =>
       prev.map((c) => (c.id === card.id ? { ...c, selected: !c.selected } : c)),
     );
   }
 
+  /********************************************************************************************************************************
+   * ▶️ Add selected Player Cards to the Game Card Stacks
+   *******************************************************************************************************************************/
+
   function addCards(cards: CardType[]) {
-    console.log(playerCards);
     for (let i = 0; i < cards.length; i++) {
       switch (cards[i].type) {
         case "color":
@@ -124,35 +147,49 @@ function App() {
     setGameState(GameState.AddCards);
   }
 
-  function pickCard() {
-    console.log(playerCards);
+  /********************************************************************************************************************************
+   * ▶️ Picks a random Card from each Game Stack and updates the Log
+   *******************************************************************************************************************************/
+
+  function pickCards() {
+    // Get a random number of all color cards and set that number to selected
     const colorPick = Math.floor(Math.random() * colorCards.length);
     setColorCards((prev) =>
       prev.map((card, i) => (
         { ...card, visible: true, selected: i === colorPick }
       )),
     );
+
+    // Get a random number of all movement cards and set that number to selected
     const movementPick = Math.floor(Math.random() * movementCards.length);
     setMovementCards((prev) =>
       prev.map((card, i) => (
         { ...card, visible: true, selected: i === movementPick }
       )),
     );
+
+    // Get a random number of all action cards and set that number to selected
     const actionPick = Math.floor(Math.random() * actionCards.length);
     setActionCards((prev) =>
       prev.map((card, i) => ({ ...card, visible: true, selected: i === actionPick })),
     );
 
+    // Update the log with the selected cards
     setLogItems((prev) => [...prev, {
       playerCard: colorCards[colorPick],
       movementCard: movementCards[movementPick],
       actionCard: actionCards[actionPick]
     }])
 
+    // Update gameState
     setGameState(GameState.CardsPicked);
   }
 
-  function resetGame() {
+  /********************************************************************************************************************************
+   * ▶️ Reset all Card stacks for a new round
+   *******************************************************************************************************************************/
+
+  function resetRound() {
     setColorCards(initialColorCards);
     setMovementCards(initialMovementCards);
     setActionCards(initialActionCards);
@@ -160,12 +197,16 @@ function App() {
     setGameState(GameState.SelectCards);
   }
 
+  /********************************************************************************************************************************
+   * 🖼️ Renders the app
+   *******************************************************************************************************************************/
+
   return (
     <div className="flex h-screen w-screen">
       <div className="w-3/4 flex flex-col">
         <div className="flex grow gap-8">
           <div className="flex w-1/2 items-center justify-center">
-          <CardsList title="Color Stack" owner={Owner.Game} cards={colorCards} interactive={false} gameState={gameState}></CardsList>
+            <CardsList title="Color Stack" owner={Owner.Game} cards={colorCards} interactive={false} gameState={gameState}></CardsList>
           </div>
           <div className="flex w-1/2 items-center justify-center">
             <CardsList title="Action Stack" owner={Owner.Game} cards={actionCards} interactive={false} gameState={gameState}></CardsList>
@@ -178,7 +219,7 @@ function App() {
 
 
           <div className="flex flex-col gap-8 p-4 bg-gray-50">
-            <GameControls gameState={gameState} onAddCards={() => addCards(playerCards.filter(card => card.selected))} onPickCard={pickCard} onReset={resetGame} />
+            <GameControls gameState={gameState} onAddCards={() => addCards(playerCards.filter(card => card.selected))} onPickCards={pickCards} onResetRound={resetRound} />
           </div>
         </div>
       </div>

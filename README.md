@@ -9,10 +9,12 @@ This create a game of random change which players can influence by adding specif
 ## Roadmap
 - ~~Card stack logic~~
 - ~~Logging of round~~
+- ~~Player card stack~~
+- ~~Card shuffle per player~~
 - Card stack per player
 - Card shuffle per player
 - Player stats
-- Enemey stats
+- Enemy stats
 - Game mechanic
 
 ## Tech Stack

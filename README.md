@@ -27,5 +27,5 @@ npm install
 npm run dev
 ```
 
-## Helpful sources
+## Helpful resources
 - [Kirupa - Auto-navigating our Grid using Breadth-First Search (BFS)](https://www.kirupa.com/data_structures_algorithms/auto_navigating_grid_using_bfs.htm)

@@ -20,7 +20,7 @@ export function GameControls({ gameState, onAddCards, onPickCards, onResetRound 
     case GameState.CardsPicked:
       return (
         <button type="button" onClick={onResetRound} className="p-4 border-2 cursor-pointer">
-          Reset game
+          Next round
         </button>
       );
 

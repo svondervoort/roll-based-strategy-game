@@ -3,11 +3,13 @@ import { useState } from "react";
 import { CardsList } from "./components/CardsList";
 import { GameControls } from "./components/GameControls";
 import { LogList } from "./components/LogList";
+import { Player } from "./components/Player";
 
 import { randomInt } from "./helpers/Helpers";
 
 import { CardKind, type CardType } from "./types/CardType";
 import type { LogType } from "./types/LogType";
+import { PlayerKind, type PlayerType } from "./types/PlayerType";
 
 /********************************************************************************************************************************
  * 🗄️ Fixed data
@@ -45,8 +47,16 @@ const actions = [
   {icon: "🌟", name: "Special"}
 ];
 
-const cardDefaults: CardType = {
-  id: "",
+const playerDefaults: Omit<PlayerType, "id"> = {
+  icon: "🧑‍🦱",
+  name: "",
+  color: colors[0].color,
+  hp: 100,
+  maxHp: 100,
+  kind: PlayerKind.AI,
+};
+
+const cardDefaults: Omit<CardType, "id"> = {
   icon: "⁉️",
   name: "",
   color: "oklch(55.4% 0.046 257.417)",
@@ -76,6 +86,7 @@ function App() {
   );
 
   const [gameState, setGameState] = useState<GameState>(GameState.SelectCards);
+  const [players, setPlayers] = useState<PlayerType[]>(createPlayers());
   const [colorCards, setColorCards] = useState<CardType[]>(initialColorCards);
   const [movementCards, setMovementCards] = useState<CardType[]>(initialMovementCards);
   const [actionCards, setActionCards] = useState<CardType[]>(initialActionCards);
@@ -83,16 +94,44 @@ function App() {
   const [logItems, setLogItems] = useState<LogType[]>([]);
 
   /********************************************************************************************************************************
+   * ▶️ Setup the Players (User and AI)
+   *******************************************************************************************************************************/
+
+  function createPlayers(): PlayerType[] {
+    const players: PlayerType[] = [];
+
+    players.push(createPlayer({ name: "You", kind: PlayerKind.User, color: colors[0].color }))
+    players.push(createPlayer({ name: "AI 1", icon: "🤖", color: colors[1].color }))
+    players.push(createPlayer({ name: "AI 2", icon: "🤖", color: colors[2].color }))
+    players.push(createPlayer({ name: "AI 3", icon: "🤖", color: colors[3].color }))
+
+    return players;
+  }
+
+  /********************************************************************************************************************************
+   * ▶️ Creates Player objects with default and overwrites
+   *******************************************************************************************************************************/
+
+  function createPlayer(overrides: Partial<PlayerType>): PlayerType {
+    return {
+      ...playerDefaults,
+      ...overrides,
+      id: crypto.randomUUID(),   // fresh unique id per card
+    };
+  }
+
+  /********************************************************************************************************************************
    * ▶️ Generate a random collection of Player Cards
    *******************************************************************************************************************************/
 
   function generatePlayerCards (): CardType[] {
-    const cards = [];
+    const userPlayer: PlayerType | undefined = players.find((p) => p.kind === PlayerKind.User);
+    const cards: CardType[] = [];
     const playerCardsCount = randomInt(1, (cardsMaxAmount/2));
     const remainingCardsCount = cardsMaxAmount - playerCardsCount;
     // Create Player Cards
     for (let i = 0; i < playerCardsCount; i++) {
-      cards.push(createCard({ icon: "🧑‍🦱", name: colors[0].name, color: colors[0].color, type: CardKind.Color, owner: Owner.Player }))
+      cards.push(createCard({ icon: userPlayer?.icon, name: userPlayer?.name, color: userPlayer?.color, type: CardKind.Color, owner: Owner.Player }))
     }
     // Fill remaining slots with Action Cards
     for (let i = 0; i < remainingCardsCount; i++) {
@@ -175,11 +214,13 @@ function App() {
     );
 
     // Update the log with the selected cards
-    setLogItems((prev) => [...prev, {
+    setLogItems((prev) => [{
+      id: crypto.randomUUID(),
+      timestamp: new Date(),
       playerCard: colorCards[colorPick],
       movementCard: movementCards[movementPick],
       actionCard: actionCards[actionPick]
-    }])
+    }, ...prev])
 
     // Update gameState
     setGameState(GameState.CardsPicked);
@@ -202,8 +243,8 @@ function App() {
    *******************************************************************************************************************************/
 
   return (
-    <div className="flex h-screen w-screen">
-      <div className="w-3/4 flex flex-col">
+    <main className="flex h-screen w-screen">
+      <section className="w-3/4 flex flex-col">
         <div className="flex grow gap-8">
           <div className="flex w-1/2 items-center justify-center">
             <CardsList title="Color Stack" owner={Owner.Game} cards={colorCards} interactive={false} gameState={gameState}></CardsList>
@@ -222,11 +263,18 @@ function App() {
             <GameControls gameState={gameState} onAddCards={() => addCards(playerCards.filter(card => card.selected))} onPickCards={pickCards} onResetRound={resetRound} />
           </div>
         </div>
-      </div>
-      <div className="w-1/4 flex flex-col gap-4 border-l border-gray-500 overflow-x-hidden overflow-y-auto">
+      </section>
+      <aside className="w-1/4 flex flex-col border-l border-gray-500">
+        <div>
+          <h2 className="p-4">Players</h2>
+          {players.map((player) => (
+            <Player key={player.id} player={player} />
+          ))}
+        </div>
+
         <LogList items={logItems}></LogList>
-      </div>
-    </div>
+      </aside>
+    </main>
   );
 }
 

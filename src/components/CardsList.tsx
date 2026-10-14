@@ -26,7 +26,7 @@ export function CardsList({
 }) {
   return (
     <div>
-      <h2>{ title }</h2>
+      <h2 className="mb-4">{ title }</h2>
       <div className={`
           flex flex-wrap perspective-midrange
           ${ owner === Owner.Game ? "" : "gap-2" }

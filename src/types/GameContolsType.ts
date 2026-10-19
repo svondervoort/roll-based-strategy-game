@@ -1,8 +1,8 @@
-import type { GameState } from "../App";
+import type { GamePhase } from "../App";
 
 export type GameControlsType = {
-    gameState: GameState;
-    onAddCards: () => void;
-    onPickCards: () => void;
+    gamePhase: GamePhase;
+    onPlanning: () => void;
+    onPicking: () => void;
     onResetRound: () => void;
 }

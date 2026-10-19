@@ -1,4 +1,4 @@
-import { GameState, Owner } from "../App";
+import { GamePhase, Owner } from "../App";
 import { PlayerType } from "../types/PlayerType";
 
 export function Player({

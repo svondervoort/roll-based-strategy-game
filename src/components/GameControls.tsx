@@ -17,10 +17,17 @@ export function GameControls({ gamePhase, onPlanning, onPicking, onResetRound }:
           </button>
       );
 
-    case GamePhase.Action:
+    case GamePhase.AiAction:
       return (
-        <button type="button" onClick={onResetRound} className="p-4 border-2 cursor-pointer">
-          Next round
+        <button type="button" disabled={true} className="p-4 border-2 opacity-50">
+          AI Performing action
+        </button>
+      );
+
+    case GamePhase.PlayerAction:
+      return (
+        <button type="button" disabled={true} className="p-4 border-2 opacity-50">
+          Select player to attack
         </button>
       );
 

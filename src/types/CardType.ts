@@ -7,8 +7,6 @@ export enum CardKind {
   Action = "action",
 }
 
-
-
 export type CardType = {
   id: string;
   icon: string;
@@ -18,4 +16,6 @@ export type CardType = {
   owner: Owner,
   visible: boolean;
   selected: boolean;
+  hp?: number|null;
+  playerId?: string;
 };

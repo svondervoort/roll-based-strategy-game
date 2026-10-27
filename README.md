@@ -11,18 +11,23 @@ This create a game of random change which players can influence by adding specif
 - ~~Logging of round~~
 - ~~Player card stack~~
 - ~~Card shuffle per player~~
-- Card stack per player
-- Card shuffle per player
-- Player stats
-- Enemy stats
-- Game mechanic
+- ~~Card stack per player~~
+- ~~Card shuffle per player~~
+- ~~Player stats~~
+- ~~Enemy stats~~
+- ~~Game mechanic~~
+- ~~Add loss state~~
+- Add win state
+- Update log to include actions
+- Enemy card logic
+- Prevent dead enemies from taking actions
+- Add health action(s)
 
 ## Tech Stack
 React 19 + TypeScript + Tailwind CSS v4, built with Vite.
 
 ## Installation and running
 ``` bash
-nvm use 24
 npm install
 npm run dev
 ```

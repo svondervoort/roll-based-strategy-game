@@ -27,7 +27,7 @@ export function Card({
       className={`
         ${interactive ? `cursor-pointer scale-100 hover:scale-125 hover:z-999!` : ``}
         ${interactive && gamePhase !== GamePhase.Planning ? `hover:rotate-6` : ``}
-        ${(card.selected && (gamePhase !== GamePhase.AiAction || gamePhase !== GamePhase.PlayerAction) && card.owner === Owner.Player) || (card.selected && (gamePhase === GamePhase.AiAction || gamePhase === GamePhase.PlayerAction) && card.owner === Owner.Game) ? "-top-8 z-999!" : "top-0" /* Highlight the card when it is selected */}
+        ${(card.selected && (gamePhase !== GamePhase.AiAction && gamePhase !== GamePhase.PlayerAction) && card.owner === Owner.Player) || (card.selected && (gamePhase === GamePhase.AiAction || gamePhase === GamePhase.PlayerAction) && card.owner === Owner.Game) ? "-top-8 z-999!" : "top-0" /* Highlight the card when it is selected */}
         ${card.visible ? "" : "rotate-y-180!" /* Reveal card value if visible */}
         group flex flex-col relative font-bold aspect-2/3 w-24 rotate-y-0 backface-visible transform-3d transition-all duration-500 z-0
         `}

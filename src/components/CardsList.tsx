@@ -1,4 +1,4 @@
-import type { GameState } from "../App";
+import type { GamePhase } from "../App";
 import { Owner } from "../App";
 import type { CardType } from "../types/CardType";
 
@@ -14,14 +14,14 @@ export function CardsList({
   owner,
   cards,
   interactive,
-  gameState,
+  gamePhase,
   onClick,
 }: {
   title: string,
   owner: Owner,
   cards: CardType[];
   interactive: boolean;
-  gameState: GameState;
+  gamePhase: GamePhase;
   onClick?: (card: CardType) => void;
 }) {
   return (
@@ -35,7 +35,7 @@ export function CardsList({
           <div key={card.id} className={`
             ${ i !== 0 && owner === Owner.Game ? "-ms-22" : "" }
           `}>
-            <Card card={card} interactive={interactive} gameState={gameState} onClick={ () => onClick?.(card) }></Card>
+            <Card card={card} interactive={interactive} gamePhase={gamePhase} onClick={ () => onClick?.(card) }></Card>
           </div>
         ))}
       </div>

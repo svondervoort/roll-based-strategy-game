@@ -1,26 +1,33 @@
-import { GameState } from "../App";
+import { GamePhase } from "../App";
 import type { GameControlsType } from "../types/GameContolsType";
 
-export function GameControls({ gameState, onAddCards, onPickCards, onResetRound }: GameControlsType) {
-  switch (gameState) {
-    case GameState.SelectCards:
+export function GameControls({ gamePhase, onPlanning, onPicking, onResetRound }: GameControlsType) {
+  switch (gamePhase) {
+    case GamePhase.Planning:
       return (
-          <button type="button" onClick={onAddCards} className="p-4 border-2 cursor-pointer">
+          <button type="button" onClick={onPlanning} className="p-4 border-2 cursor-pointer">
             Add cards
           </button>
       );
 
-    case GameState.AddCards:
+    case GamePhase.Picking:
       return (
-          <button type="button" onClick={onPickCards} className="p-4 border-2 cursor-pointer">
+          <button type="button" onClick={onPicking} className="p-4 border-2 cursor-pointer">
             Pick cards
           </button>
       );
 
-    case GameState.CardsPicked:
+    case GamePhase.AiAction:
       return (
-        <button type="button" onClick={onResetRound} className="p-4 border-2 cursor-pointer">
-          Next round
+        <button type="button" disabled={true} className="p-4 border-2 opacity-50">
+          AI Performing action
+        </button>
+      );
+
+    case GamePhase.PlayerAction:
+      return (
+        <button type="button" disabled={true} className="p-4 border-2 opacity-50">
+          Select player to attack
         </button>
       );
 

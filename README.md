@@ -7,6 +7,8 @@ After all players ended their card-adding turn a random card gets picked from ea
 This create a game of random change which players can influence by adding specific cards to the stack to increase changes.
 
 ## Roadmap
+
+### V1
 - ~~Card stack logic~~
 - ~~Logging of round~~
 - ~~Player card stack~~
@@ -22,6 +24,15 @@ This create a game of random change which players can influence by adding specif
 - Enemy card logic
 - Prevent dead enemies from taking actions
 - Add health action(s)
+- Add game start screen
+- Add option to remove/add enemy players
+
+### V2
+- Add strategy logic/game board
+- Add movement card stack
+
+### V3
+- Add multiplayer logic
 
 ## Tech Stack
 React 19 + TypeScript + Tailwind CSS v4, built with Vite.

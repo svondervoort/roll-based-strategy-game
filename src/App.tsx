@@ -5,7 +5,7 @@ import { GameControls } from "./components/GameControls";
 import { LogList } from "./components/LogList";
 import { Player } from "./components/Player";
 
-import { randomInt } from "./helpers/Helpers";
+import { randomInt, clamp } from "./helpers/Helpers";
 
 import { CardKind, type CardType } from "./types/CardType";
 import type { LogType } from "./types/LogType";
@@ -42,10 +42,10 @@ const movements = [
 ];
 
 const actions = [
-  {icon: "👊", name: "Punch", hp: 5},
-  {icon: "🔫", name: "Pistol", hp: 10},
-  {icon: "🚀", name: "Rocket", hp: 20},
-  {icon: "🌟", name: "Special", hp: 50}
+  {icon: "👊", name: "Punch", hp: -5},
+  {icon: "🔫", name: "Pistol", hp: -10},
+  {icon: "🚀", name: "Rocket", hp: -20},
+  {icon: "🌟", name: "Special", hp: -50}
 ];
 
 const playerDefaults: Omit<PlayerType, "id"> = {
@@ -244,7 +244,7 @@ function App() {
       // Update players
       setPlayers((prev) =>
         prev.map((p) =>
-          p.id === target.id ? { ...p, hp: Math.max(0, p.hp - (pickedActionCard.hp ?? 0)) } : p,
+          p.id === target.id ? { ...p, hp: clamp(p.hp + (pickedActionCard.hp ?? 0), 0, p.maxHp) } : p,
         ),
       );
       // Reset round after 5 seconds (for visual clarity that an AI has the action)
@@ -272,7 +272,7 @@ function App() {
 
     setPlayers((prev) =>
       prev.map((p) =>
-        p.id === player.id ? { ...p, hp: Math.max(0, p.hp - (pickedActionCard.hp ?? 0)) } : p,
+        p.id === player.id ? { ...p, hp: clamp(p.hp + (pickedActionCard.hp ?? 0), 0, p.maxHp) } : p,
       ),
     );
 

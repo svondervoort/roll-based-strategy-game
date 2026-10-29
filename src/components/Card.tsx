@@ -29,12 +29,17 @@ export function Card({
         ${interactive && gamePhase !== GamePhase.Planning ? `hover:rotate-6` : ``}
         ${(card.selected && (gamePhase !== GamePhase.AiAction && gamePhase !== GamePhase.PlayerAction) && card.owner === Owner.Player) || (card.selected && (gamePhase === GamePhase.AiAction || gamePhase === GamePhase.PlayerAction) && card.owner === Owner.Game) ? "-top-8 z-999!" : "top-0" /* Highlight the card when it is selected */}
         ${card.visible ? "" : "rotate-y-180!" /* Reveal card value if visible */}
-        group flex flex-col relative font-bold aspect-2/3 w-24 rotate-y-0 backface-visible transform-3d transition-all duration-500 z-0
+        group flex flex-col relative font-bold aspect-2/3 w-32 rotate-y-0 backface-visible transform-3d transition-all duration-500 z-0
         `}
       onClick={onClick}
     >
       {/* Card Front */}
       <span className={`${faceClasses} bg-white`} style={{ outlineColor: card.color }}>
+        { card.hp ?
+          <span className="absolute top-0 start-0 px-2 py-1 bg-black text-white rounded-tl-lg rounded-br-lg text-xs">
+            {card.hp}
+          </span>
+        : '' }
         <span className="h-1/2 flex items-center justify-center w-full">{card.icon}</span>
         <span className="p-4 h-1/2 flex items-center justify-center text-white w-full" style={{ backgroundColor: card.color }}>{card.visible ? card.name : "?"}</span>
       </span>

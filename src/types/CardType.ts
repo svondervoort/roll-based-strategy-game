@@ -13,9 +13,9 @@ export type CardType = {
   name: string;
   color: string;
   type: CardKind;
-  owner: Owner,
+  owner: Owner;
   visible: boolean;
   selected: boolean;
-  hp?: number|null;
+  hp?: number | null;
   playerId?: string;
 };

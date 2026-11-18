@@ -218,6 +218,17 @@ function App() {
   }
 
   /********************************************************************************************************************************
+   * ▶️ Update Log Items
+   *******************************************************************************************************************************/
+
+  function addLogItem(entry: Omit<LogType, "id" | "timestamp">) {
+    setLogItems((prev) => [
+      { id: crypto.randomUUID(), timestamp: new Date(), ...entry },
+      ...prev,
+    ]);
+  }
+
+  /********************************************************************************************************************************
    * ▶️ Add selected Player Cards to the Game Card Stacks
    *******************************************************************************************************************************/
 
@@ -302,18 +313,6 @@ function App() {
     );
     const pickedActionCard: CardType = actionCards[actionPick];
 
-    // Update the log with the selected cards
-    setLogItems((prev) => [
-      {
-        id: crypto.randomUUID(),
-        timestamp: new Date(),
-        playerCard: colorCards[colorPick],
-        movementCard: movementCards[movementPick],
-        actionCard: actionCards[actionPick],
-      },
-      ...prev,
-    ]);
-
     /******************************************************************************************************************************
      * 🤖 AI Route - Attack lower HP first, else attack Player
      *****************************************************************************************************************************/
@@ -338,6 +337,13 @@ function App() {
             : p,
         ),
       );
+      // Update log
+      addLogItem({
+        attacker: pickedPlayer,
+        movementCard: movementCards[movementPick],
+        actionCard: pickedActionCard,
+        target,
+      });
       // Reset round after 5 seconds (for visual clarity that an AI has the action)
       setTimeout(() => resetRound(), 1000);
 
@@ -355,11 +361,23 @@ function App() {
    *******************************************************************************************************************************/
 
   function doActionOnPlayer(player: PlayerType) {
-    console.log("doActionOnPlayer", player);
     if (gamePhase !== GamePhase.PlayerAction) return;
+
+    const colorCard = colorCards.find((c) => c.selected);
+    const attacker = players.find((p) => p.id === colorCard?.playerId);
+    if (!attacker) return;
 
     const pickedActionCard = actionCards.find((c) => c.selected);
     if (!pickedActionCard) return;
+
+    if (!userPlayer) return;
+
+    addLogItem({
+      attacker: userPlayer,
+      movementCard: movementCards[0],
+      actionCard: pickedActionCard,
+      target: player,
+    });
 
     setPlayers((prev) =>
       prev.map((p) =>
